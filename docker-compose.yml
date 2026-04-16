@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    # Map the host port (3000) to the container port (3000)
+    # Change the first 3000 to another number if it's already in use on your server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./prisma:/app/prisma
+    # Use environment variables from the .env file
+    env_file:
+      - .env
+    restart: unless-stopped
