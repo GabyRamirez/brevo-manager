@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-import { prisma } from '@/lib/prisma';
-import { sendVerificationEmail } from '@/lib/brevo';
-import { verifyTurnstileToken } from '@/lib/turnstile';
+import { prisma } from '../../../../lib/prisma';
+import { sendVerificationEmail } from '../../../../lib/brevo';
+import { verifyTurnstileToken } from '../../../../lib/turnstile';
 
 export async function POST(req: Request) {
   try {

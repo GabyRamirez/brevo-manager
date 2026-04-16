@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { getContactStatus, getAllLists } from '@/lib/brevo';
+import { getContactStatus, getAllLists } from '../../../../lib/brevo';
 
 export async function GET() {
   const email = (await cookies()).get('user_email')?.value;

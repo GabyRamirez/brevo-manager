@@ -2,16 +2,23 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!token) {
+      setError('Si us plau, completa el sistema de seguretat.');
+      return;
+    }
+
     setLoading(true);
     setError('');
     setMessage('');
@@ -20,7 +27,7 @@ export default function Register() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, turnstileToken: token }),
       });
 
       const data = await res.json();
@@ -30,6 +37,7 @@ export default function Register() {
       setMessage(data.message);
       setEmail('');
       setPassword('');
+      setToken(null); // Reset token after success
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -78,6 +86,17 @@ export default function Register() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
+          <div className="flex justify-center py-2">
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+              onSuccess={setToken}
+              onExpire={() => setToken(null)}
+              onError={() => setToken(null)}
+              theme="dark"
+            />
+          </div>
+
           <button
             type="submit"
             disabled={loading}

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '../../../../lib/prisma';
 import { cookies } from 'next/headers';
-import { verifyTurnstileToken } from '@/lib/turnstile';
+import { verifyTurnstileToken } from '../../../../lib/turnstile';
 
 export async function POST(req: Request) {
   try {

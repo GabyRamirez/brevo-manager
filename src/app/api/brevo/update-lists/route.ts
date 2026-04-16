@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { updateContactLists } from '@/lib/brevo';
+import { updateContactLists } from '../../../../lib/brevo';
 
 export async function POST(req: Request) {
   const email = (await cookies()).get('user_email')?.value;
