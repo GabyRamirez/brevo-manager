@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -21,6 +23,12 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!token) {
+      setError('Si us plau, completa el sistema de seguretat.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -28,7 +36,7 @@ export default function Login() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, turnstileToken: token }),
       });
 
       const data = await res.json();
@@ -40,6 +48,7 @@ export default function Login() {
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message);
+      setToken(null); // Reset on error to force re-verification
     } finally {
       setLoading(false);
     }
@@ -86,6 +95,14 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          
+          <div className="flex justify-center py-2">
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+              onSuccess={(token) => setToken(token)}
+            />
+          </div>
+
           <button
             type="submit"
             disabled={loading}
