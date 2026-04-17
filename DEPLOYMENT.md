@@ -33,7 +33,7 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"  # Canvia el primer "3000" si ja està en ús (ex: "3001:3000")
+      - "3006:3000"  # S'ha assignat el port 3006 per evitar conflictes
     volumes:
       - ./prisma:/app/prisma
     restart: unless-stopped
