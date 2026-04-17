@@ -45,7 +45,7 @@ async function VerifyContent({ token }: { token: string | undefined }) {
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        emailVerified: new Date(),
+        isVerified: true,
         verificationToken: null,
       },
     });
