@@ -93,7 +93,7 @@ export default function Register() {
               onSuccess={setToken}
               onExpire={() => setToken(null)}
               onError={() => setToken(null)}
-              theme="dark"
+              options={{ theme: 'dark' }}
             />
           </div>
 
